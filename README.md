@@ -1,54 +1,19 @@
-# < This section can be removed >
+# AWS User (create an IAM User and corresponding secrets)
 
-Official doc for public modules [hashicorp](https://developer.hashicorp.com/terraform/registry/modules/publish)
-
-Repo structure:
-
-```
-├── README.md
-├── main.tf
-├── variables.tf
-├── outputs.tf
-├── ...
-├── modules/
-│   ├── nestedA/
-│   │   ├── README.md
-│   │   ├── variables.tf
-│   │   ├── main.tf
-│   │   ├── outputs.tf
-│   ├── nestedB/
-│   ├── .../
-├── examples/
-│   ├── exampleA/
-│   │   ├── main.tf
-│   ├── exampleB/
-│   ├── .../
-```
-
-# My Terraform Module
-
-< module description >
+Terraform module to manage an IAM user and save his access keys in a secret
 
 ## Usage
 
-< describe the module minimal code required for a deployment >
-
 ```hcl
-module "my_module_example" {
+module "access_s3" {
+  source      = "github.com/tx-pts-dai/terraform-aws-user"
+  policy_json = data.aws_iam_policy_document.my_policy
+  policy_name = "access-to-${local.s3_bucket_name}-s3-bucket"
+  secret_name = "to-access-s3://${local.s3_bucket_name}"
+  username    = "s3_access"
 }
+
 ```
-
-## Explanation and description of interesting use-cases
-
-< create a h2 chapter for each section explaining special module concepts >
-
-## Examples
-
-< if the folder `examples/` exists, put here the link to the examples subfolders with their descriptions >
-
-## Contributing
-
-< issues and contribution guidelines for public modules >
 
 ### Pre-Commit
 
@@ -73,11 +38,13 @@ as described in the `.pre-commit-config.yaml` file
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0 |
 
 ## Providers
 
-No providers.
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.0 |
 
 ## Modules
 
@@ -85,15 +52,30 @@ No modules.
 
 ## Resources
 
-No resources.
+| Name | Type |
+|------|------|
+| [aws_iam_access_key.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_access_key) | resource |
+| [aws_iam_user.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user) | resource |
+| [aws_iam_user_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_user_policy) | resource |
+| [aws_secretsmanager_secret.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret) | resource |
+| [aws_secretsmanager_secret_version.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/secretsmanager_secret_version) | resource |
 
 ## Inputs
 
-No inputs.
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_policy_json"></a> [policy\_json](#input\_policy\_json) | Policy to attach to the user | `string` | n/a | yes |
+| <a name="input_policy_name"></a> [policy\_name](#input\_policy\_name) | Name to give to the policy attached to the user | `string` | n/a | yes |
+| <a name="input_secret_name"></a> [secret\_name](#input\_secret\_name) | AWS Secrets Manager secret name. To store the AWS IAM user's access keys | `string` | n/a | yes |
+| <a name="input_username"></a> [username](#input\_username) | AWS IAM Username to create | `string` | n/a | yes |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_info_to_rotate"></a> [info\_to\_rotate](#output\_info\_to\_rotate) | how to rotate access key |
+| <a name="output_secret_arn"></a> [secret\_arn](#output\_secret\_arn) | ARN of the secret with user access keys |
+| <a name="output_user_arn"></a> [user\_arn](#output\_user\_arn) | ARN of the AWS IAM user |
 <!-- END OF PRE-COMMIT-TERRAFORM DOCS HOOK -->
 
 ## Authors
@@ -102,4 +84,4 @@ Module is maintained by [Alfredo Gottardo](https://github.com/AlfGot), [David Be
 
 ## License
 
-Apache 2 Licensed. See [LICENSE](< link to license file >) for full details.
+Apache 2 Licensed. See [LICENSE](LICENSE) for full details.
