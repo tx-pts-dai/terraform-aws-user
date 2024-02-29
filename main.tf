@@ -10,7 +10,6 @@ terraform {
 
 resource "aws_iam_user" "this" {
   name = var.username
-  path = "/"
 }
 
 resource "aws_iam_access_key" "this" {
@@ -24,8 +23,9 @@ resource "aws_iam_user_policy" "this" {
 }
 
 resource "aws_secretsmanager_secret" "this" {
-  name        = var.secret_name
-  description = "Access keys of the ${aws_iam_user.this.name} IAM User"
+  name                    = var.secret_name
+  description             = "Access keys of the ${aws_iam_user.this.name} IAM User"
+  recovery_window_in_days = 0
 }
 
 resource "aws_secretsmanager_secret_version" "this" {
