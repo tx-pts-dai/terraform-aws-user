@@ -1,16 +1,15 @@
 # AWS User (create an IAM User and corresponding secrets)
 
-Terraform module to manage an IAM user and save his access keys in a secret
+Terraform module to manage an IAM user and store his access keys in a secret
 
 ## Usage
 
 ```hcl
 module "access_s3" {
-  source      = "github.com/tx-pts-dai/terraform-aws-user"
-  policy_json = data.aws_iam_policy_document.my_policy
-  policy_name = "access-to-${local.s3_bucket_name}-s3-bucket"
-  secret_name = "to-access-s3://${local.s3_bucket_name}"
+  source      = "tx-pts-dai/user/aws"
   username    = "s3_access"
+  secret_name = "to-access-s3://${local.s3_bucket_name}"
+  policy_json = data.aws_iam_policy_document.my_policy.json
 }
 
 ```
@@ -64,8 +63,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_policy_json"></a> [policy\_json](#input\_policy\_json) | Policy to attach to the user | `string` | n/a | yes |
-| <a name="input_policy_name"></a> [policy\_name](#input\_policy\_name) | Name to give to the policy attached to the user | `string` | n/a | yes |
+| <a name="input_policy_json"></a> [policy\_json](#input\_policy\_json) | Optional policy to attach to the user | `string` | `""` | no |
 | <a name="input_secret_name"></a> [secret\_name](#input\_secret\_name) | AWS Secrets Manager secret name. To store the AWS IAM user's access keys | `string` | n/a | yes |
 | <a name="input_username"></a> [username](#input\_username) | AWS IAM Username to create | `string` | n/a | yes |
 

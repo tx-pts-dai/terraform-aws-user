@@ -17,7 +17,8 @@ resource "aws_iam_access_key" "this" {
 }
 
 resource "aws_iam_user_policy" "this" {
-  name   = var.policy_name
+  count = var.policy_json != "" ? 1 : 0
+
   user   = aws_iam_user.this.name
   policy = var.policy_json
 }

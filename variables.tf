@@ -1,11 +1,7 @@
 variable "policy_json" {
-  description = "Policy to attach to the user"
+  description = "Optional policy to attach to the user"
   type        = string
-}
-
-variable "policy_name" {
-  description = "Name to give to the policy attached to the user"
-  type        = string
+  default     = ""
 }
 
 variable "secret_name" {
